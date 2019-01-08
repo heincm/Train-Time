@@ -28,7 +28,8 @@ $("#submit").on("click", function (event) {
     firstTrain = $("#firstTrain").val().trim();
     frequency = $("#frequency").val().trim();
     trainConverted = moment(firstTrain, "HH:mm").subtract(1, "years");
-
+    console.log(firstTrain)
+    console.log(trainConverted.toJSON());
 
     // database object
     let databaseObject = {
@@ -48,8 +49,12 @@ database.ref().on("child_added", function (snapshot) {
     // storing the snapshot.val() in a variable for convenience
     var sv = snapshot.val();
     let currentTime = moment();
-    var diffTime = moment().diff(moment(trainConverted), "minutes");
-    console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+    var diffTime = moment().diff(moment(sv["first Train"]), "minutes");
+    let timeRemainder = diffTime % sv.frequency;
+    console.log("Time Remainder " + timeRemainder);
+
+
+    console.log("CURRENT TIME: " + moment(currentTime).format("HH:mm"));
     console.log("DIFFERENCE IN TIME: " + diffTime);
 
 
