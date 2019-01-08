@@ -47,24 +47,18 @@ $("#submit").on("click", function (event) {
 database.ref().on("child_added", function (snapshot) {
 
     // storing the snapshot.val() in a variable for convenience
-    var sv = snapshot.val();
+    let sv = snapshot.val();
     let currentTime = moment();
-    var diffTime = moment().diff(moment(sv["first Train"]), "minutes");
+    let diffTime = moment().diff(moment(sv["first Train"]), "minutes");
     let timeRemainder = diffTime % sv.frequency;
+    let minutesToTrain = sv.frequency - timeRemainder;
+    let nextTrain = moment().add(minutesToTrain, "minutes");
+
+    console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
+    console.log("MINUTES TILL TRAIN: " + minutesToTrain);
     console.log("Time Remainder " + timeRemainder);
-
-
     console.log("CURRENT TIME: " + moment(currentTime).format("HH:mm"));
     console.log("DIFFERENCE IN TIME: " + diffTime);
-
-
-    // Console.loging the last user's data
-    /*
-    console.log("Train Name " + sv["train Name"]);
-    console.log("destination " + sv.destination);
-    console.log("First Train " + sv["first Train"]);
-    console.log("Frequency " + sv.frequency);
-    */
 
     //let empStartPretty = moment.unix(months)
 
@@ -73,10 +67,8 @@ database.ref().on("child_added", function (snapshot) {
     tr.append($("<td>").html(sv["train Name"]));
     tr.append($("<td>").html(sv.destination));
     tr.append($("<td>").html(sv.frequency));
-    tr.append($("<td class='rightMe'>").html(sv["first Train"]));
-    tr.append($("<td>").html(moment().from(sv.firstTrain)))
-    //tr.append($("<td class='rightMe'>").html("$ " + sv.monthlyRate));
-    //tr.append($("<td class='rightMe'>").html("$ " + months * sv.monthlyRate));
+    tr.append($("<td>").text(moment(nextTrain).format("hh:mm A")));
+    tr.append($("<td>").html(minutesToTrain))
 
     $("#tBody").append(tr);
 });
