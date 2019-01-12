@@ -17,7 +17,7 @@ let trainName;
 let destination;
 let firstTrain;
 let frequency;
-let trainConverted
+let trainConverted;
 
 // on click event for submit button
 $("#submit").on("click", function (event) {
@@ -28,8 +28,6 @@ $("#submit").on("click", function (event) {
     firstTrain = $("#firstTrain").val().trim();
     frequency = $("#frequency").val().trim();
     trainConverted = moment(firstTrain, "HH:mm").subtract(1, "years");
-    console.log(firstTrain)
-    console.log(trainConverted.toJSON());
 
     // database object
     let databaseObject = {
@@ -43,27 +41,19 @@ $("#submit").on("click", function (event) {
     database.ref().push(databaseObject);
 });
 
-// Firebase watcher .on("child_added"
 database.ref().on("child_added", function (snapshot) {
 
-    // storing the snapshot.val() in a variable for convenience
+    // database variables
     let sv = snapshot.val();
-    let currentTime = moment();
     let diffTime = moment().diff(moment(sv["first Train"]), "minutes");
     let timeRemainder = diffTime % sv.frequency;
     let minutesToTrain = sv.frequency - timeRemainder;
     let nextTrain = moment().add(minutesToTrain, "minutes");
 
-    console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
-    console.log("MINUTES TILL TRAIN: " + minutesToTrain);
-    console.log("Time Remainder " + timeRemainder);
-    console.log("CURRENT TIME: " + moment(currentTime).format("HH:mm"));
-    console.log("DIFFERENCE IN TIME: " + diffTime);
-
-    //let empStartPretty = moment.unix(months)
-
+    // varaible to new table row
     let tr = $("<tr>");
 
+    // add appropriate table data 
     tr.append($("<td>").html(sv["train Name"]));
     tr.append($("<td>").html(sv.destination));
     tr.append($("<td>").html(sv.frequency));
